@@ -1,3 +1,9 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
 html,
 body {
   padding: 0;
@@ -13,4 +19,21 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.children-items {
+  margin-left: 16rem;
+}
+
+.p-card {
+  min-width: 22rem;
+}
+
+@media (max-width: 786px) {
+  .children-items {
+    margin-left: 0rem;
+  }
+  .sidebar {
+    display: none !important;
+  }
 }

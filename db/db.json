@@ -1,0 +1,43 @@
+{
+  "plugins": [
+    {
+      "id": 1,
+      "name": "Plugin 1",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque provident architecto harum possimus non necessitatibus facilis a perspiciatis ex, quod voluptatibus earum assumenda ullam iusto sequisuscipit eveniet ipsa sit!",
+      "visibility": true
+    },
+    {
+      "visibility": true,
+      "id": 2,
+      "name": "Plugin 2",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque provident architecto harum possimus non necessitatibus facilis a perspiciatis ex, quod voluptatibus earum assumenda ullam iusto sequisuscipit eveniet ipsa sit!"
+    },
+    {
+      "id": 3,
+      "name": "Plugin 3",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque provident architecto harum possimus non necessitatibus facilis a perspiciatis ex, quod voluptatibus earum assumenda ullam iusto sequisuscipit eveniet ipsa sit!",
+      "visibility": false
+    },
+    {
+      "id": 4,
+      "name": "Plugin 4",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque provident architecto harum possimus non necessitatibus facilis a perspiciatis ex, quod voluptatibus earum assumenda ullam iusto sequisuscipit eveniet ipsa sit!",
+      "visibility": false
+    },
+    {
+      "id": 5,
+      "name": "Plugin 5",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque provident architecto harum possimus non necessitatibus facilis a perspiciatis ex, quod voluptatibus earum assumenda ullam iusto sequisuscipit eveniet ipsa sit!",
+      "visibility": true
+    },
+    {
+      "id": 6,
+      "name": "Plugin 6",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque provident architecto harum possimus non necessitatibus facilis a perspiciatis ex, quod voluptatibus earum assumenda ullam iusto sequisuscipit eveniet ipsa sit!",
+      "visibility": false
+    }
+  ],
+  "visibility": {
+    "global": false
+  }
+}

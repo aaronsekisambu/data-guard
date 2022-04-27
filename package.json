@@ -6,9 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "api": "json-server --watch db/db.json ---port 3020",
     "lint": "next lint"
   },
   "dependencies": {
+    "@tailwindcss/forms": "^0.5.0",
+    "axios": "^0.27.2",
+    "json-server": "^0.17.0",
     "next": "12.1.5",
     "react": "18.0.0",
     "react-dom": "18.0.0"
@@ -17,8 +21,11 @@
     "@types/node": "17.0.27",
     "@types/react": "18.0.7",
     "@types/react-dom": "18.0.0",
+    "autoprefixer": "^10.4.5",
     "eslint": "8.14.0",
     "eslint-config-next": "12.1.5",
+    "postcss": "^8.4.12",
+    "tailwindcss": "^3.0.24",
     "typescript": "4.6.3"
   }
 }
