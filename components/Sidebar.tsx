@@ -2,14 +2,14 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { routes } from "db/data";
+import { useGlobalContext } from "hooks";
 
-interface SidebarProps {
-  globalVisibility: (show: boolean) => void;
-  toggle: boolean;
-}
 
-const Sidebar = ({ globalVisibility, toggle }: SidebarProps) => {
+
+const Sidebar = () => {
+  const { show, globalVisibility } = useGlobalContext();
   const router = useRouter();
+//   console.log("router.", router.pathname.indexOf("/finance"))
   return (
     <>
       <nav className="md:left-0 md:block md:fixed md:top-0 sidebar md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-sm bg-gray-100  flex flex-wrap items-center justify-between relative md:w-64 z-10 pt-4">
@@ -45,20 +45,20 @@ const Sidebar = ({ globalVisibility, toggle }: SidebarProps) => {
             </ul>
             <div
               className={`bottom-0 ${router.pathname.indexOf(`/marketing`) === -1 && "hidden"} absolute px-4 py-6 flex w-full justify-between align-center bg-gradient-to-t ${
-                !toggle ? "from-green-200" : "from-red-200"
+                !show ? "from-green-200" : "from-red-200"
               } to-transparent`}
             >
-                All plugins {!toggle ? "enabled" : "disabled"}
+                All plugins {!show ? "enabled" : "disabled"}
                 <div
                   className={`md:w-14 md:h-7 w-12 h-6 flex items-center ${
-                    !toggle ? "bg-green-500" : "bg-rose-500"
+                    !show ? "bg-green-500" : "bg-rose-500"
                   } rounded-full p-1 cursor-pointer`}
-                  onClick={() => globalVisibility(!toggle)}
+                  onClick={globalVisibility}
                 >
                   <div
                     className={
                       "material-symbols-outlined  bg-white md:w-6 md:h-6 h-5 w-5 rounded-full shadow-md transform duration-300 ease-in-out" +
-                      (!toggle ? "transform translate-x-5" : "")
+                      (!show ? "transform translate-x-5" : "")
                     }
                   >
                     power_settings_new

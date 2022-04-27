@@ -2,16 +2,21 @@ import React from "react";
 import axios from "axios";
 import { useGlobalContext } from "hooks";
 import { url } from "config";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { useEffect } from "react";
 
 interface MarketingProps {
   id: number;
-  name: string;
+  title: string;
   description: string;
   visibility: boolean;
 }
 
 const Marketing = () => {
-  const { data, getPlugins } = useGlobalContext();
+  const { data, getPlugins, show } = useGlobalContext();
+  const [d, setD] = useState<any>({ disabbled: [], enabled: [] });
+  const router = useRouter();
 
   const toggleItem = async (plugin: MarketingProps) => {
     try {
@@ -26,6 +31,43 @@ const Marketing = () => {
     }
   };
 
+  const obj = [];
+
+  const findTabTitle = data.tabdata.find(
+    (tab: any) =>
+      tab.title.toLocaleLowerCase() === router.pathname.split("/").join("")
+  );
+
+  // for(const plugin in data.plugins){
+  //   for(const tabs in findTabTitle.disabbled){
+  //     // if(tabs === plugin.title.split(" ").join("").toLocaleLowerCase())
+  //   }
+  // }
+
+  useEffect(() => {
+    data.plugins.forEach((meee: any) => {
+      //     for(let i = 0; i < findTabTitle?.disabbled?.length; i++){
+      //       console.log("where", i)
+      //    if(i === meee.title.split(" ").join("").toLocaleLowerCase()){
+      //     return setD({...d, disabled: [...meee]})
+      //    }
+      //   return setD({...d, enabled: [...meee]})
+      //  }
+
+      findTabTitle.disabled.map((dis: any) => {
+        if (dis === meee.title.split(" ").join("").toLocaleLowerCase()) {
+          return setD({ ...d, disabled: [meee] });
+        }
+        return setD( { enabled: [meee] });
+      });
+    });
+  }, []);
+
+  // data.plugins.forEach((element: any) => {
+  //   if(element)
+  // });
+  console.log("router.", d);
+
   return (
     <>
       <div className="flex-col">
@@ -33,20 +75,20 @@ const Marketing = () => {
           Marketing plugins
         </div>
         <div className="flex flex-wrap justify-between sm:justify-center">
-          {data?.data?.map((plugin: MarketingProps) => (
+          {data?.plugins.map((plugin: MarketingProps) => (
             <div
               key={plugin.id}
               className="w-96 p-card h-64 px-4 mx-10 my-8 border-2 border-gray-200 rounded-md py-4"
             >
               <div className="flex justify-between">
-                <p className="text-lg text-gray-600">{plugin.name}</p>
+                <p className="text-lg text-gray-600">{plugin.title}</p>
                 <div className="flex-col">
                   <button
                     className={`md:w-14 md:h-7 w-12 h-6 flex items-center ${
                       plugin.visibility ? "bg-green-500" : "bg-rose-500"
-                    } rounded-full p-1 ${data.global ? "" : "cursor-pointer"}`}
+                    } rounded-full p-1 ${show ? "" : "cursor-pointer"}`}
                     onClick={() => toggleItem(plugin)}
-                    disabled={data.global ? true : false}
+                    disabled={show ? true : false}
                   >
                     <div
                       className={

@@ -1,7 +1,7 @@
 import React from "react";
 import Dashboard from "layout";
 
-const Personal = () => {
+const Personnel = () => {
   return (
     <>
       <div className="flex flex-wrap">
@@ -15,4 +15,4 @@ const Personal = () => {
   );
 };
 
-export default Personal;
+export default Personnel;
