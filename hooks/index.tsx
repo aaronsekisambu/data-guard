@@ -1,65 +1,81 @@
 import axios from "axios";
 import { url } from "config";
 import { useRouter } from "next/router";
-import React, {
-  useContext,
-  useState,
-  createContext,
-  useEffect,
-} from "react";
+import React, { useContext, useState, createContext, useEffect } from "react";
+import { DataProps, PluginContextProps, PluginProps, PluginProviderProps } from "types";
 
-interface PluginContextProps {
-  data?: any;
-  getPlugins: () => void;
-  globalVisibility: () => void;
-  show: boolean;
-}
 
-interface IPlugins {
-    title: string
-    description: string
-}
-
-interface PluginProps {
-    [name: string]: IPlugins;
-}
-export interface DataProps {
-//   id: number;
-  plugins: any;
-  tabdata: any;
-  tabs: any;
-}
 
 const PluginContext = createContext<PluginContextProps>({
-  data: {plugins: {}, tabdata: {}, tabs: {}},
+  data: { plugins: {}, tabdata: {}, tabs: {} },
   getPlugins: () => {},
   globalVisibility: () => {},
+  toggleItem: () => {},
   show: false,
+  allPlugins: [],
 });
-export const PluginProvider = ({ children }: any) => {
-  const [allData, setData] = useState<DataProps>({plugins: [], tabdata: [], tabs: []});
+export const PluginProvider = ({ children }: PluginProviderProps) => {
+  const [allData, setData] = useState<DataProps>({ plugins: [], tabdata: [], tabs: [] });
   const [show, setShow] = useState<boolean>(false);
+  const [activePlugins, setActivePlugins] = useState<string[]>([]);
+  const [inactivePlugins, setInactivePlugins] = useState<string[]>([]);
+  const [disabledPlugins, setDisabledPlugins] = useState<string[]>([]);
+  const [all, setAl] = useState<any>({});
+
+  const [allPlugins, setAllPlugins] = useState<any>([]);
+
   const router = useRouter();
 
   const globalVisibility = async () => {
     try {
-      const { data } = await axios.put(`${url}/visibility`, {
+       await axios.patch(`${url}/data`, {
         global: !show,
       });
-      setShow(data.global);
+      setShow(!show);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const toggleItem = async (acitve: string[], inactive: string[], disabled: string[], title: string) => {
+  const toggleItem = async (plugin: PluginProps) => {
+    const newDis = [...allPlugins];
+    const activeValues: string[] = [];
+    const inactiveValues: string[] = [];
+    const n: PluginProps[] = [];
     try {
-        if(router.pathname.indexOf(`/${title.toLocaleLowerCase()}`) !== -1) {
-           const findTab =  allData.tabdata.find((tab:any) => tab.title === title)
-           const disabled = [];
-        //    allData.plugins.
+      newDis?.map((me: PluginProps) => {
+        if (me.title === plugin.title) {
+          n.push({
+            title: me.title,
+            description: me.description,
+            status: plugin.status === "active" ? "inactive" : "active",
+          });
+          if (plugin.status === "active") {
+            const activeOnly = activePlugins.filter(a => a !== plugin.title.split(" ").join("").toLocaleLowerCase()); // only active one
+            const inactiveOnly = activePlugins.filter(a => a === plugin.title.split(" ").join("").toLocaleLowerCase()); // set to inactive
+            inactiveValues.push(...inactivePlugins, ...inactiveOnly);
+            return activeValues.push(...activeOnly);
+          }
+          const inactiveOnly = inactivePlugins.filter(a => a !== plugin.title.split(" ").join("").toLocaleLowerCase());
+          const activeOnly = inactivePlugins.filter(a => a === plugin.title.split(" ").join("").toLocaleLowerCase());
+          activeValues.push(...activePlugins, ...activeOnly);
+          return inactiveValues.push(...inactiveOnly);
         }
-
+        return n.push(me);
+      });
+      setAllPlugins(n);
+      const { data } = await axios.post(`${url}/data/`, {
+        tabs: all?.tabs,
+        tabdata: {
+          tab1: { title: "Marketing", icon: "apps", active: activeValues, disabled: disabledPlugins, inactive: inactiveValues },
+          tab2: all?.tabdata?.tab2,
+          tab3: all?.tabdata?.tab3,
+        },
+        plugins: all?.plugins,
+      });
+      if (data) {
+        return getPlugins();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -68,35 +84,59 @@ export const PluginProvider = ({ children }: any) => {
   const getPlugins = async () => {
     try {
       const { data } = await axios.get(`${url}/data`);
-      const {plugins, tabdata, tabs} = data;
-      const allowed = allData.plugins
-    //   const { data: vis } = await axios.get(`${url}/visibility`);
-    // console.log("in data", Object.keys(plugins))//  
-    //  console.log("router.", router.pathname.split("/").join(""))
-    setData({...allData, plugins: Object.values(plugins), tabdata: Object.values(tabdata), tabs});
-    //   setShow(vis.global);
+      setAl(data);
+      const { plugins, tabdata, tabs } = data;
+      let pluginsValues: any = [];
+      let activeValues: string[] = [];
+      let inactiveValues: string[] = [];
+      let disableValues: string[] = [];
+      const findTabTitle: any = Object.values(tabdata).find((tab: any) => tab.title.toLocaleLowerCase() === router?.pathname?.split("/").join(""));
+      Object.values(plugins).map((pl: any) => {
+        if (findTabTitle?.active.includes(pl.title.split(" ").join("").toLocaleLowerCase())) {
+          activeValues.push(pl.title.split(" ").join("").toLocaleLowerCase());
+          pluginsValues.push({
+            title: pl.title,
+            description: pl.description,
+            status: "active",
+          });
+          return;
+        }
+
+        if (findTabTitle?.inactive.includes(pl.title.split(" ").join("").toLocaleLowerCase())) {
+          inactiveValues.push(pl.title.split(" ").join("").toLocaleLowerCase());
+          pluginsValues.push({
+            title: pl.title,
+            description: pl.description,
+            status: "inactive",
+          });
+          return;
+        }
+
+        if (findTabTitle?.disabled.includes(pl.title.split(" ").join("").toLocaleLowerCase())) {
+          disableValues.push(pl.title.split(" ").join("").toLocaleLowerCase());
+          pluginsValues.push({
+            title: pl.title,
+            description: pl.description,
+            status: "disabled",
+          });
+          return;
+        }
+      });
+      setAllPlugins([...pluginsValues]);
+      setActivePlugins([...activeValues]);
+      setInactivePlugins([...inactiveValues]);
+      setDisabledPlugins([...disableValues]);
+      setData({ ...allData, plugins: Object.values(plugins), tabdata: Object.values(tabdata), tabs });
     } catch (error) {
       // TO-DO return error to the server
-      console.log("error");
+      console.log("error", error);
     }
   };
   useEffect(() => {
     getPlugins();
-  }, []);
+  }, [router?.pathname]);
 
-  const findTab =  allData.tabdata.find((tab:any) => tab.title === "Marketing")
-
-//   console.log("out data", allData, allData.plugins.map((p:any) => findTab?.disabled.includes(p.title.split(" ").join("").toLocaleLowerCase())))
-
-
-  return (
-    <PluginContext.Provider
-      value={{ data: allData, getPlugins, show, globalVisibility }}
-    >
-      {children}
-    </PluginContext.Provider>
-  );
+  return <PluginContext.Provider value={{ data: allData, getPlugins, show, globalVisibility, toggleItem, allPlugins }}>{children}</PluginContext.Provider>;
 };
 
-export const useGlobalContext = () =>
-  useContext<PluginContextProps>(PluginContext);
+export const useGlobalContext = () => useContext<PluginContextProps>(PluginContext);

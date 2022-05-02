@@ -1,14 +1,15 @@
 import React from "react";
-import Dashboard from "layout";
+import { useGlobalContext } from "hooks";
+import Card from "components/Card";
 
 const Personnel = () => {
+  const { toggleItem, allPlugins } = useGlobalContext();
   return (
     <>
-      <div className="flex flex-wrap">
-        <div className="w-full px-4">
-          <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
-            Coming Soon ....
-          </div>
+      <div className="flex-col">
+        <div className="w-full xl:w-8/12 mb-12 xl:mb-12 px-10 pt-10">Personnel plugins</div>
+        <div className="flex flex-wrap justify-between sm:justify-center">
+          <Card allPlugins={allPlugins} toggleItem={toggleItem} />
         </div>
       </div>
     </>

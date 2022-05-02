@@ -8,23 +8,23 @@
     "tabdata": {
       "tab1": {
         "title": "Marketing",
-        "icon": "icon-marketing",
+        "icon": "apps",
         "active": [
-          "plugin1",
-          "plugin2",
-          "plugin4"
+          "plugin2"
         ],
         "disabled": [
           "plugin3"
         ],
         "inactive": [
+          "plugin4",
           "plugin5",
-          "plugin6"
+          "plugin6",
+          "plugin1"
         ]
       },
       "tab2": {
         "title": "Finance",
-        "icon": "icon-finance",
+        "icon": "bubble_chart",
         "active": [
           "plugin7",
           "plugin8"
@@ -38,7 +38,7 @@
       },
       "tab3": {
         "title": "Personnel",
-        "icon": "icon-people",
+        "icon": "task",
         "active": [
           "plugin11"
         ],
@@ -103,7 +103,8 @@
         "title": "Plugin 13",
         "description": "Dolor laboris culpa ipsum aliqua velit mollit."
       }
-    }
+    },
+    "global": true
   },
   "errors": {}
 }
